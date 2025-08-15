@@ -9,6 +9,8 @@ import torch
 import uuid
 import os
 from PIL import Image
+from fastapi.responses import FileResponse
+
 
 app = FastAPI()
 
@@ -18,7 +20,9 @@ hf_token = os.getenv("HUGGINGFACE_TOKEN")
 pipe = StableDiffusionXLPipeline.from_pretrained(
     model_id,
     torch_dtype=torch.float16,
-    use_auth_token=hf_token
+    variant="fp16",
+    use_safetensors=True,
+    token=hf_token
 ).to("cuda")
 pipe.enable_attention_slicing()
 
